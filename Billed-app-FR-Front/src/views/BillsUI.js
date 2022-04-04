@@ -23,16 +23,22 @@ const rows = (data) => {
   /*
   Tri par ordre anti-chrono pour le test 1
   */
-  const antiChrono = (a, b) => ((a.date < b.date) ? 1 : -1)
-  const billSorted = data.sort(antiChrono)
 
-  return (billSorted && billSorted.length) ? billSorted.map(bill => row(bill)).join("") : ""
-  //return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
+  // const antiChrono = (a, b) => ((a.date < b.date) ? 1 : -1);
+  // const billSorted = data.sort(antiChrono);
+
+  //return (billSorted && billSorted.length) ? billSorted.map(bill => row(bill)).join("") : ""
+
+  return (data && data.length) ? data.sort((a, b) => {
+    if (a.date > b.date) {
+      return -1
+    }
+  }).map(bill => row(bill)).join("") : ""
   // }
 }
 
-export default ({ data: billSorted, loading, error }) => {
-
+export default ({ data: bills, loading, error }) => {
+  //export default ({ data: billSorted, loading, error }) => {
   const modal = () => (`
     <div class="modal fade" id="modaleFile" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -77,7 +83,7 @@ export default ({ data: billSorted, loading, error }) => {
               </tr>
           </thead>
           <tbody data-testid="tbody">
-            ${rows(billSorted)}
+            ${rows(bills)}
           </tbody>
           </table>
         </div>

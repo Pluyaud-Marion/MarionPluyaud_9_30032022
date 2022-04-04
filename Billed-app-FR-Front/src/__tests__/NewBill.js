@@ -13,6 +13,8 @@ describe("Given I am connected as an employee", () => {
       const html = NewBillUI()
       document.body.innerHTML = html
       //to-do write assertion
+      // on s'attend (Expect) à la présence du texte (getAllByText) "envoyer une note de frais" (toBeTruthy) sur la page NewBill
+
     })
   })
 })
