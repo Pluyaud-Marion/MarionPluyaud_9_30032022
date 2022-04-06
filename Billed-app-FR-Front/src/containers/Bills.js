@@ -33,26 +33,12 @@ export default class {
         .bills()
         .list()
         .then(snapshot => {
-          /*
-          Tri à l'affichage antichronologique - insertion dans constante dateSorted
-          */
-          // const antiChrono = (a, b) => ((a.date < b.date) ? 1 : -1)
-          // const dateSorted = snapshot.sort(antiChrono)
-
           const bills = snapshot
             .map(doc => {
               try {
-
-                /*
-                Changement du paramètre de formatDate (dateSorted au lieu de doc.date)
-                */
-                /*
-                Suppression date:formatDate(doc.date)
-                */
                 return {
                   ...doc,
                   //date: formatDate(doc.date),
-                  // date: formatDate(dateSorted),
                   status: formatStatus(doc.status)
                 }
               } catch (e) {
@@ -62,7 +48,6 @@ export default class {
                 return {
                   ...doc,
                   date: doc.date,
-                  //date: formatDate(dateSorted),
                   status: formatStatus(doc.status)
                 }
               }
