@@ -15,6 +15,9 @@ import Bills from "../containers/Bills.js"
 
 import router from "../app/Router.js";
 
+jest.mock("../app/store", () => mockStore)
+
+
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
     // l'icone selectionnée doit être en surbrillance (icon-window) -> classe surbrillance = active-icon
@@ -116,42 +119,44 @@ describe("Given I am connected as an employee", () => {
       //simule le click
       userEvent.click(firstIcon)
 
-      //on vérifie que la fonction simulée a bien été appelée + on vérifie que la modale s'est bien ouverte au click (avec le dataId)
+      //on vérifie que la fonction simulée a bien été appelée + on vérifie que la modale s'est bien ouverte au click (avec le dataId rajouté dans view)
       expect(handleClickIconEye).toHaveBeenCalled()
-      const modaleFile = screen.getAllByTestId('modaleFile')
+      const modaleFile = screen.getByTestId('modalFile')
       expect(modaleFile).toBeTruthy()
 
     })
   })
-
 })
 
 
-
-// test d'intégration GET
+// // test d'intégration GET
 describe("Given I am a user connected as Employee", () => {
   describe("When I navigate to Bills", () => {
+
     test("fetches bills from mock API GET", async () => {
-      localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "employee@test.tld" }));
-
-      const billContainer = new Bills({
-        document, onNavigate, store: mockStore, localStorage: window.localStorage
-      });
-
+      localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "a@a" }));
 
       const root = document.createElement("div")
       root.setAttribute("id", "root")
       document.body.append(root)
       router()
       window.onNavigate(ROUTES_PATH.Bills)
-      // await waitFor(() => screen.getByText("Validations"))
+
       await waitFor(() => screen.getByText("Mes notes de frais"))
-      const contentStatus = await screen.getByText("Statut")
-      // const contentPending = await screen.getByText("En attente (1)")
-      expect(contentStatus).toBeTruthy()
-      // const contentRefused = await screen.getByText("Refusé (2)")
-      // expect(contentRefused).toBeTruthy()
-      // expect(screen.getByTestId("big-billed-icon")).toBeTruthy()
+      const allContentBills = await screen.getByText("Mes notes de frais")
+      expect(allContentBills).toBeTruthy()
+
+      await waitFor(() => screen.getByText("En attente"))
+      const contentPending = await screen.getAllByText("En attente")
+      expect(contentPending).toBeTruthy()
+
+      await waitFor(() => screen.getByText("Accepté"))
+      const contentAccepted = await screen.getAllByText("Accepté")
+      expect(contentAccepted).toBeTruthy()
+
+      await waitFor(() => screen.getAllByText("Refused"))
+      const contentRefused = await screen.getAllByText("Refused")
+      expect(contentRefused).toBeTruthy()
     })
     describe("When an error occurs on API", () => {
       beforeEach(() => {
@@ -163,7 +168,7 @@ describe("Given I am a user connected as Employee", () => {
         )
         window.localStorage.setItem('user', JSON.stringify({
           type: 'Employee',
-          email: "employee@test.tld"
+          email: "a@a"
         }))
         const root = document.createElement("div")
         root.setAttribute("id", "root")
@@ -200,6 +205,6 @@ describe("Given I am a user connected as Employee", () => {
         expect(message).toBeTruthy()
       })
     })
-
   })
 })
+
