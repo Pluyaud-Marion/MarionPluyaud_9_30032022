@@ -1,7 +1,7 @@
 import VerticalLayout from './VerticalLayout.js'
 
 export default () => {
-
+  //ajout error message avec datatest-id = errorMessage
   return (`
     <div class='layout'>
       ${VerticalLayout(120)}
@@ -56,6 +56,7 @@ export default () => {
                   <div class="col-half">
                     <label for="file" class="bold-label">Justificatif</label>
                     <input required type="file" class="form-control blue-border" data-testid="file" />
+                    <span class="error-message" data-testid="errorMessage"></span>
                   </div>
                 </div>
             </div>

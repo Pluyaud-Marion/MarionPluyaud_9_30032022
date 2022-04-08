@@ -25,6 +25,8 @@ export default class NewBill {
     const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
 
+    const error = document.getElementsByClassName("error-message")
+
     const extension = fileName.split(".").pop() //récupère l'extension (retourne le dernier élément)
 
     formData.append('file', file)
@@ -47,7 +49,11 @@ export default class NewBill {
           this.fileName = fileName
         }).catch(error => console.error(error))
     } else {
-      alert("Vous devez choisir un fichier de au formats suivants : jpg / jpeg / png / gif")
+      //// ??????
+      error.innerHTML = "Vous devez choisir un fichier aux formats suivants : jpg / jpeg / png"
+      error.style.color = "red"
+      document.querySelector(`input[data-testid="file"]`).value = null // vide le fichier car erreur
+      //alert("Vous devez choisir un fichier aux formats suivants : jpg / jpeg / png")
     }
   }
   handleSubmit = e => {
