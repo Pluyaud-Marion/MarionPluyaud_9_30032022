@@ -18,14 +18,13 @@ export default class NewBill {
 
   handleChangeFile = e => {
     e.preventDefault()
+    document.querySelector(".error-message").style.display = "none"
 
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length - 1]
     const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
-
-    const error = document.getElementsByClassName("error-message")
 
     const extension = fileName.split(".").pop() //récupère l'extension (retourne le dernier élément)
 
@@ -34,6 +33,7 @@ export default class NewBill {
 
     // empêche de rentrer des fichiers avec les extensions rejetées par le back
     if (extension === 'jpg' || extension === "jpeg" || extension === "png") {
+
       this.store
         .bills()
         .create({
@@ -43,17 +43,15 @@ export default class NewBill {
           }
         })
         .then(({ fileUrl, key }) => {
-          console.log(fileUrl)
+          //console.log(fileUrl)
           this.billId = key
           this.fileUrl = fileUrl
           this.fileName = fileName
-        }).catch(error => console.error(error))
+        }).catch(error => console.error("error", error))
     } else {
-      //// ??????
-      error.innerHTML = "Vous devez choisir un fichier aux formats suivants : jpg / jpeg / png"
-      error.style.color = "red"
-      document.querySelector(`input[data-testid="file"]`).value = null // vide le fichier car erreur
-      //alert("Vous devez choisir un fichier aux formats suivants : jpg / jpeg / png")
+      document.querySelector(`input[data-testid="file"]`).value = null; //passe la valeur de l'input file à null
+      document.querySelector(".error-message").style.display = "block"
+      document.querySelector(".error-message").style.color = "red"
     }
   }
   handleSubmit = e => {
@@ -78,6 +76,7 @@ export default class NewBill {
   }
 
   // not need to cover this function by tests
+  /* istanbul ignore next */
   updateBill = (bill) => {
     if (this.store) {
       this.store

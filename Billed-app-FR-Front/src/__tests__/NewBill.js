@@ -38,15 +38,88 @@ describe("Given I am connected as an employee", () => {
 
       addFileButton.addEventListener('click', handleChangeFile) //on appelle la fonction au click
       userEvent.click(addFileButton) //on simule le click
-
       expect(handleChangeFile).toHaveBeenCalled() //on teste si la fonction a été appelée
 
-
-      ///// ???????
-      const error = screen.getByTestId("errorMessage")
-      expect(error).toBeFalsy()
-
     })
+
+    describe("And I upload an incorrect file(test.txt for example)", () => {
+      test("Then, it should display an error message", () => {
+        const html = NewBillUI()
+        document.body.innerHTML = html
+
+        const onNavigate = (pathname) => {
+          document.body.innerHTML = ROUTES({ pathname })
+        }
+
+        Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+        window.localStorage.setItem('user', JSON.stringify({
+          type: 'Employee'
+        }))
+
+        const newBill = new NewBill({
+          document, onNavigate, store: null, localStorage: window.localStorage
+        })
+
+        const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e)) //on simule la fonction handleChangeFile
+
+        const addFileButton = screen.getByTestId('file') //on récup le datatestId du bouton submit
+
+        addFileButton.addEventListener("change", handleChangeFile)
+
+        userEvent.click(addFileButton, { //on simule un fichier de type texte
+          target: {
+            files: [new File(["test.txt"], "test.txt", { type: "text/txt" })]
+          }
+        })
+
+        expect(addFileButton.files[0].name).toBe("test.txt") // Le fichier est : test.txt
+        expect(addFileButton.files[0].name.endsWith("jpeg")).not.toBeTruthy() // Le fichier n'a pas comme fin jpeg
+        expect(addFileButton.files[0].name.endsWith("jpg")).not.toBeTruthy() // Le fichier n'a pas comme fin jpg
+        expect(addFileButton.files[0].name.endsWith("png")).not.toBeTruthy() // Le fichier n'a pas comme fin png
+
+        // Le message d'erreur apparait car le fichier n'est pas au format attendu
+        const errorMessage = screen.getByTestId("errorMessage")
+        expect(errorMessage).toBeTruthy()
+
+      })
+    })
+    describe("And I upload a correct file(jpg, jpeg, png)", () => {
+      test("Then, it should render the file's name", () => {
+        const html = NewBillUI()
+        document.body.innerHTML = html
+
+        const onNavigate = (pathname) => {
+          document.body.innerHTML = ROUTES({ pathname })
+        }
+
+        Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+        window.localStorage.setItem('user', JSON.stringify({
+          type: 'Employee'
+        }))
+
+        const newBill = new NewBill({
+          document, onNavigate, store: null, localStorage: window.localStorage
+        })
+
+        const handleChangeFile = jest.fn((e) => newBill.handleChangeFile(e)) //on simule la fonction handleChangeFile
+
+        const addFileButton = screen.getByTestId('file') //on récup le datatestId du bouton submit
+
+        addFileButton.addEventListener("change", handleChangeFile)
+
+        userEvent.click(addFileButton, { //on simule un fichier de type jpeg
+          target: {
+            files: [new File(["test.jpeg"], "test.jpeg", { type: "image/jpeg" })]
+          }
+        })
+
+        expect(addFileButton.files[0].name).toBe("test.jpeg") // Le fichier est : test.jpeg
+
+        expect(addFileButton.files[0].name.endsWith("jpeg")).toBeTruthy() // Le fichier a comme fin jpeg
+
+      })
+    })
+
 
     // test d'intégration POST 
     describe("And I submit a valid bill", () => {
@@ -99,7 +172,6 @@ describe("Given I am connected as an employee", () => {
         userEvent.click(submitButton)
         expect(handleSubmit).toHaveBeenCalled()
       })
-
     })
   })
 })

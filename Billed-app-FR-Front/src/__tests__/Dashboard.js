@@ -118,7 +118,7 @@ describe('Given I am connected as an Admin', () => {
       expect(screen.getByTestId(`dashboard-form`)).toBeTruthy()
     })
   })
-
+  /////////
   describe('When I am on Dashboard page and I click 2 times on edit icon of a card', () => {
     test('Then, big bill Icon should Appear', () => {
 
@@ -146,7 +146,7 @@ describe('Given I am connected as an Admin', () => {
       userEvent.click(iconEdit)
       userEvent.click(iconEdit)
       const bigBilledIcon = screen.queryByTestId("big-billed-icon")
-      expect(bigBilledIcon).toBeTruthy()
+      expect(bigBilledIcon).not.toBeTruthy() //big-billed-icon n'apparait plus quand une note est ouverte
     })
   })
 
