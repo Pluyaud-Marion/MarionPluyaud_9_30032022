@@ -33,13 +33,13 @@ export default class {
         .bills()
         .list()
         .then(snapshot => {
-
+          const antiChrono = (a, b) => ((a.date < b.date) ? 1 : -1)
+          snapshot.sort(antiChrono)
           const bills = snapshot
             .map(doc => {
               try {
                 return {
                   ...doc,
-                  //date: formatDate(doc.date),
                   status: formatStatus(doc.status)
                 }
               } catch (e) {
