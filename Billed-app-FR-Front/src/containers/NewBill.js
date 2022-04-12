@@ -31,8 +31,10 @@ export default class NewBill {
     formData.append('file', file)
     formData.append('email', email)
 
+    const extArray = ["jpg", "jpeg", "png"]
+
     // empêche de rentrer des fichiers avec les extensions rejetées par le back
-    if (extension === 'jpg' || extension === "jpeg" || extension === "png") {
+    if (extArray.includes(extension)) {
 
       this.store
         .bills()

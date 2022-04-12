@@ -17,10 +17,11 @@ import router from "../app/Router.js";
 
 jest.mock("../app/store", () => mockStore)
 
-
+/* 
+Teste si quand on est sur la page principale l'icone des notes de frais dans barre verticale est en surbrillance (classe active-icon)
+*/
 describe("Given I am connected as an employee", () => {
   describe("When I am on Bills Page", () => {
-    // l'icone selectionnée doit être en surbrillance (icon-window) -> classe surbrillance = active-icon
     test("Then bill icon in vertical layout should be highlighted", async () => {
 
       Object.defineProperty(window, 'localStorage', { value: localStorageMock })
@@ -35,13 +36,10 @@ describe("Given I am connected as an employee", () => {
       await waitFor(() => screen.getByTestId('icon-window'))
       const windowIcon = screen.getByTestId('icon-window')
 
-      //to-do write expect expression
-
-      // vérifie que l'élément a bien la classe active-icon
-      expect(windowIcon).toHaveClass("active-icon")
-
-
+      expect(windowIcon).toHaveClass("active-icon") // vérifie que l'élément a bien la classe active-icon
     })
+
+    // Teste si quand on est sur la page principale les notes sont triées de la plus récente à la plus ancienne
     test("Then bills should be ordered from earliest to latest", () => {
       document.body.innerHTML = BillsUI({ data: bills })
       const dates = screen.getAllByText(/^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$/i).map(a => a.innerHTML)
@@ -52,8 +50,11 @@ describe("Given I am connected as an employee", () => {
     })
   })
 
+  /*
+  Teste quand on clique pour ajouter une nouvelle note, si une modale s'ouvre
+  */
   describe("When I click on the new bill button", () => {
-    test("A modal with a form should open", () => {
+    test("Then a modal with a form should open", () => {
       //si l'user se trouve sur la page contenant bills dans url -> on affiche la route du même nom
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
@@ -76,18 +77,20 @@ describe("Given I am connected as an employee", () => {
       const button = screen.getByTestId("btn-new-bill") //on récup le data-testid du bouton
 
       const handleClickNewBill = jest.fn(() => bill.handleClickNewBill())
-      button.addEventListener("click", handleClickNewBill)
-      userEvent.click(button)
+      button.addEventListener("click", handleClickNewBill) // au clic on appelle la fonction
+      userEvent.click(button) // On simule le click
 
-      //on vérifie que la fonction simulée a bien été appelée + on vérifie que la modale s'est bien ouverte au click (avec le dataId)
-      expect(handleClickNewBill).toHaveBeenCalled()
-      const modaleNewBill = screen.getByTestId("form-new-bill")
-      expect(modaleNewBill).toBeTruthy()
+      expect(handleClickNewBill).toHaveBeenCalled() //on vérifie que la fonction simulée a bien été appelée
+      const modaleNewBill = screen.getByTestId("form-new-bill") // on récup le dataId de la modale
+      expect(modaleNewBill).toBeTruthy() // on vérifie que la modale s'est bien ouverte (si elle apparait)
     })
   });
 
+  /*
+  Teste quand on click sur l'icone oeil si une modale avec le justificatif s'ouvre
+  */
   describe("When I click on the icon eye", () => {
-    test("A modal with picture of a bill should open", () => {
+    test("Then a modal with picture of a bill should open", () => {
       //si l'user se trouve sur la page contenant bills dans url -> on affiche la route du même nom
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
@@ -110,30 +113,25 @@ describe("Given I am connected as an employee", () => {
       $.fn.modal = jest.fn()
 
       const icon = screen.getAllByTestId("icon-eye") //on récup tout ce qui a le data-testid = icon-eye
-      const firstIcon = icon[0] //récup le 1er élément
+      const firstIcon = icon[0] //récup le 1er élément pour le test
 
-      //constante handleClickIconEye simule la fonction handleClickIconEye
-      const handleClickIconEye = jest.fn(() => bill.handleClickIconEye(firstIcon))
+      const handleClickIconEye = jest.fn(() => bill.handleClickIconEye(firstIcon)) //simule la fonction handleClickIconEye
 
-      firstIcon.addEventListener('click', handleClickIconEye)
-      //simule le click
-      userEvent.click(firstIcon)
+      firstIcon.addEventListener('click', handleClickIconEye) //Au click on appelle la fonction
+      userEvent.click(firstIcon) //simule le click
 
-      //on vérifie que la fonction simulée a bien été appelée + on vérifie que la modale s'est bien ouverte au click (avec le dataId rajouté dans view)
-      expect(handleClickIconEye).toHaveBeenCalled()
-      const modaleFile = screen.getByTestId('modalFile')
-      expect(modaleFile).toBeTruthy()
-
+      expect(handleClickIconEye).toHaveBeenCalled() //on vérifie que la fonction simulée a bien été appelée
+      const modaleFile = screen.getByTestId('modalFile') //on récup le dataId de la modale (rajouté dans view)
+      expect(modaleFile).toBeTruthy() //on vérifie que la modale s'est bien ouverte au click (si elle est visible)
     })
   })
 })
 
 
-// // test d'intégration GET
+// test d'intégration GET
 describe("Given I am a user connected as Employee", () => {
   describe("When I navigate to Bills", () => {
-
-    test("fetches bills from mock API GET", async () => {
+    test("Then fetches bills from mock API GET", async () => {
       localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "a@a" }));
 
       const root = document.createElement("div")

@@ -38,9 +38,8 @@ export default class Login {
   }
 
   /*
-  Modification du selecteur 
+  Modification du selecteur pour résolution bug 2
   */
-
   handleSubmitAdmin = e => {
     e.preventDefault()
     const user = {

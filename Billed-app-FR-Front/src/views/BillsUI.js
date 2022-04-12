@@ -21,9 +21,8 @@ const row = (bill) => {
 
 const rows = (data) => {
   /*
-  Tri par ordre anti-chrono pour le test 1
+  Tri par ordre anti-chrono pour le test 1 (données mockées)
   */
-
   return (data && data.length) ? data.sort((a, b) => {
     if (a.date > b.date) {
       return -1

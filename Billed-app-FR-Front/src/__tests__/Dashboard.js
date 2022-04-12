@@ -146,7 +146,10 @@ describe('Given I am connected as an Admin', () => {
       userEvent.click(iconEdit)
       userEvent.click(iconEdit)
       const bigBilledIcon = screen.queryByTestId("big-billed-icon")
-      expect(bigBilledIcon).not.toBeTruthy() //big-billed-icon n'apparait plus quand une note est ouverte
+      /*
+      Modification -> rajout négation = l'élément big-billed-icon ne doit plus apparaitre quand une note est ouverte
+      */
+      expect(bigBilledIcon).not.toBeTruthy()
     })
   })
 

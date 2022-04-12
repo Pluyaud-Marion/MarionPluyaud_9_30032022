@@ -11,11 +11,12 @@ import router from "../app/Router.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
 
 
-
+/*
+Teste quand on est connecté en tant qu'employé et qu'on veut ajouter une nouvelle note de frais, on doit pouvoir ajouter un nouveau fichier
+*/
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page", () => {
     test("Then I should click on 'Choisir un fichier' for add a new file", async () => {
-      // test de possibilité d'ajouter un fichier dans les notes de frais
       const html = NewBillUI()
       document.body.innerHTML = html
 
@@ -23,11 +24,13 @@ describe("Given I am connected as an employee", () => {
         document.body.innerHTML = ROUTES({ pathname })
       }
 
+      //on se trouve sur le parcours employé
       Object.defineProperty(window, 'localStorage', { value: localStorageMock })
       window.localStorage.setItem('user', JSON.stringify({
         type: 'Employee'
       }))
 
+      //on instancie une nouvelle instance de la classe NewBill
       const newBill = new NewBill({
         document, onNavigate, store: null, localStorage: window.localStorage
       })
@@ -42,7 +45,10 @@ describe("Given I am connected as an employee", () => {
 
     })
 
-    describe("And I upload an incorrect file(test.txt for example)", () => {
+    /*
+    Teste si un message d'erreur apparait en cas d'upload d'un fichier au mauvais format
+    */
+    describe("When I am on NewBill Page, and I upload an incorrect file(test.txt for example)", () => {
       test("Then, it should display an error message", () => {
         const html = NewBillUI()
         document.body.innerHTML = html
@@ -80,10 +86,13 @@ describe("Given I am connected as an employee", () => {
         // Le message d'erreur apparait car le fichier n'est pas au format attendu
         const errorMessage = screen.getByTestId("errorMessage")
         expect(errorMessage).toBeTruthy()
-
       })
     })
-    describe("And I upload a correct file(jpg, jpeg, png)", () => {
+
+    /*
+    Teste si on voit bien apparaitre le nom du fichier ajouté en cas d'upload d'un fichier au bon format
+    */
+    describe("When I am on NewBill Page, and I upload a correct file(jpg, jpeg, png)", () => {
       test("Then, it should render the file's name", () => {
         const html = NewBillUI()
         document.body.innerHTML = html
@@ -116,62 +125,65 @@ describe("Given I am connected as an employee", () => {
         expect(addFileButton.files[0].name).toBe("test.jpeg") // Le fichier est : test.jpeg
 
         expect(addFileButton.files[0].name.endsWith("jpeg")).toBeTruthy() // Le fichier a comme fin jpeg
-
-      })
-    })
-
-
-    // test d'intégration POST 
-    describe("And I submit a valid bill", () => {
-      test("Then a new bill is created", async () => {
-        const html = NewBillUI()
-        document.body.innerHTML = html
-
-        const onNavigate = (pathname) => {
-          document.body.innerHTML = ROUTES({ pathname })
-        }
-
-        Object.defineProperty(window, 'localStorage', { value: localStorageMock })
-        window.localStorage.setItem('user', JSON.stringify({
-          type: 'Employee'
-        }))
-
-        const newBill = new NewBill({
-          document, onNavigate, store: null, localStorage: window.localStorage
-        })
-
-        const simulBill = {
-          type: "Restaurants et bars",
-          name: 'Marion',
-          amount: 300,
-          date: "2008-08-08",
-          vat: "60",
-          pct: 20,
-          commentary: "Repas équipe",
-          fileUrl: "../src/img/restau.jpg",
-          fileName: "restau.jpg",
-        }
-
-        const submitButton = screen.getByTestId('form-new-bill')
-
-        const handleSubmit = jest.fn((e) => newBill.handleSubmit(e))
-
-        newBill.create = (newBill) => newBill
-
-        document.querySelector(`input[data-testid="expense-name"]`).value = simulBill.name
-        document.querySelector(`input[data-testid="datepicker"]`).value = simulBill.date
-        document.querySelector(`select[data-testid="expense-type"]`).value = simulBill.type
-        document.querySelector(`input[data-testid="amount"]`).value = simulBill.amount
-        document.querySelector(`input[data-testid="vat"]`).value = simulBill.vat
-        document.querySelector(`input[data-testid="pct"]`).value = simulBill.pct
-        document.querySelector(`textarea[data-testid="commentary"]`).value = simulBill.commentary
-        newBill.fileUrl = simulBill.fileUrl
-        newBill.fileName = simulBill.fileName
-
-        submitButton.addEventListener("click", handleSubmit)
-        userEvent.click(submitButton)
-        expect(handleSubmit).toHaveBeenCalled()
       })
     })
   })
 })
+
+/*
+Test d'intégration POST - création d'une nouvelle note de frais par un employé
+*/
+describe("Given I am connected as an employee", () => {
+  describe("When I submit a valid bill", () => {
+    test("Then a new bill is created", async () => {
+      const html = NewBillUI()
+      document.body.innerHTML = html
+
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee'
+      }))
+
+      const newBill = new NewBill({
+        document, onNavigate, store: null, localStorage: window.localStorage
+      })
+
+      const simulBill = {
+        type: "Restaurants et bars",
+        name: 'Marion',
+        amount: 300,
+        date: "2008-08-08",
+        vat: "60",
+        pct: 20,
+        commentary: "Repas équipe",
+        fileUrl: "../src/img/restau.jpg",
+        fileName: "restau.jpg",
+      }
+
+      const submitButton = screen.getByTestId('form-new-bill')
+
+      const handleSubmit = jest.fn((e) => newBill.handleSubmit(e))
+
+      newBill.create = (newBill) => newBill
+
+      document.querySelector(`input[data-testid="expense-name"]`).value = simulBill.name
+      document.querySelector(`input[data-testid="datepicker"]`).value = simulBill.date
+      document.querySelector(`select[data-testid="expense-type"]`).value = simulBill.type
+      document.querySelector(`input[data-testid="amount"]`).value = simulBill.amount
+      document.querySelector(`input[data-testid="vat"]`).value = simulBill.vat
+      document.querySelector(`input[data-testid="pct"]`).value = simulBill.pct
+      document.querySelector(`textarea[data-testid="commentary"]`).value = simulBill.commentary
+      newBill.fileUrl = simulBill.fileUrl
+      newBill.fileName = simulBill.fileName
+
+      submitButton.addEventListener("click", handleSubmit)
+      userEvent.click(submitButton)
+      expect(handleSubmit).toHaveBeenCalled()
+    })
+  })
+})
+

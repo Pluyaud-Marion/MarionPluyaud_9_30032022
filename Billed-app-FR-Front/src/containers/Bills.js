@@ -33,6 +33,7 @@ export default class {
         .bills()
         .list()
         .then(snapshot => {
+          // tri pour affichage des bills triées
           const antiChrono = (a, b) => ((a.date < b.date) ? 1 : -1)
           snapshot.sort(antiChrono)
           const bills = snapshot
