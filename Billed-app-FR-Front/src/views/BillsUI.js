@@ -25,7 +25,6 @@ const rows = (data) => {
   if (data && data.length) {
     return data.sort(antiChrono).map(bill => row(bill)).join("")
   }
-
 }
 
 //ajout data-testid="modalFile"
