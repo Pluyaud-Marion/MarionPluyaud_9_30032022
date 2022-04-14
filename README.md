@@ -12,7 +12,7 @@ Travail réalisé :
 - Rélisation de tests unitaires et tests d'intégration
 - Amélioration du rapport de couverture (>80% attendu sur Bills.js et NewBill.js) ([Rapport de couverture](https://user-images.githubusercontent.com/80038185/163198218-c89785db-f0e9-46cb-81a6-4bba51076d60.png)
 )
-- Rédaction de tests End-to-End pour le parcours Employé : ....
+- Rédaction de tests End-to-End pour le parcours Employé
 
 Détail des missions demandées par l'entreprise : [Kanban](https://www.notion.so/a7a612fc166747e78d95aa38106a55ec?v=2a8d3553379c4366b6f66490ab8f0b90)
 
