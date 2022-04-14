@@ -1,5 +1,5 @@
 import { ROUTES_PATH } from '../constants/routes.js'
-import { formatDate, formatStatus } from "../app/format.js"
+import { formatDate, formatStatus, antiChrono } from "../app/format.js"
 import Logout from "./Logout.js"
 
 export default class {
@@ -34,9 +34,8 @@ export default class {
         .list()
         .then(snapshot => {
           // tri pour affichage des bills triées
-          const antiChrono = (a, b) => ((a.date < b.date) ? 1 : -1)
-          snapshot.sort(antiChrono)
           const bills = snapshot
+            .sort(antiChrono)
             .map(doc => {
               try {
                 return {

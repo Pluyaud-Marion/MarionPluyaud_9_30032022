@@ -1,7 +1,7 @@
 import VerticalLayout from './VerticalLayout.js'
 import ErrorPage from "./ErrorPage.js"
 import LoadingPage from "./LoadingPage.js"
-
+import { antiChrono } from "../app/format.js"
 import Actions from './Actions.js'
 
 const row = (bill) => {
@@ -18,16 +18,14 @@ const row = (bill) => {
     </tr>
     `)
 }
-
 const rows = (data) => {
   /*
-  Tri par ordre anti-chrono pour le test 1 (données mockées)
+  Tri par ordre anti-chrono
   */
-  return (data && data.length) ? data.sort((a, b) => {
-    if (a.date > b.date) {
-      return -1
-    }
-  }).map(bill => row(bill)).join("") : ""
+  if (data && data.length) {
+    return data.sort(antiChrono).map(bill => row(bill)).join("")
+  }
+
 }
 
 //ajout data-testid="modalFile"

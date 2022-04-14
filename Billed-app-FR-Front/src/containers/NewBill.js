@@ -35,7 +35,6 @@ export default class NewBill {
 
     // empêche de rentrer des fichiers avec les extensions rejetées par le back
     if (extArray.includes(extension)) {
-
       this.store
         .bills()
         .create({
@@ -51,7 +50,7 @@ export default class NewBill {
           this.fileName = fileName
         }).catch(error => console.error("error", error))
     } else {
-      document.querySelector(`input[data-testid="file"]`).value = null; //passe la valeur de l'input file à null
+      e.target.value = null //passe la valeur de l'input file à null
       document.querySelector(".error-message").style.display = "block"
       document.querySelector(".error-message").style.color = "red"
     }

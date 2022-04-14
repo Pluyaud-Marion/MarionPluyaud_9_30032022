@@ -19,3 +19,14 @@ export const formatStatus = (status) => {
       return "Refused"
   }
 }
+
+/*
+Fonction de tri
+*/
+export const antiChrono = (a, b) => {
+  if (a.date < b.date) {
+    return 1
+  } else {
+    return -1
+  }
+}
