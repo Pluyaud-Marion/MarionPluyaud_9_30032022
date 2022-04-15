@@ -33,9 +33,8 @@ export default class {
         .bills()
         .list()
         .then(snapshot => {
-          // tri pour affichage des bills triées
           const bills = snapshot
-            .sort(antiChrono)
+            .sort(antiChrono) //appel de la fonction de tri
             .map(doc => {
               try {
                 return {

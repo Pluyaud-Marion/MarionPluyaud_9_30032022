@@ -19,9 +19,6 @@ const row = (bill) => {
     `)
 }
 const rows = (data) => {
-  /*
-  Tri par ordre anti-chrono
-  */
   if (data && data.length) {
     return data.sort(antiChrono).map(bill => row(bill)).join("")
   }

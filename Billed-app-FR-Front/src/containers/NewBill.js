@@ -25,12 +25,10 @@ export default class NewBill {
     const fileName = filePath[filePath.length - 1]
     const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
-
-    const extension = fileName.split(".").pop() //récupère l'extension (retourne le dernier élément)
-
     formData.append('file', file)
     formData.append('email', email)
 
+    const extension = fileName.split(".").pop() //récupère l'extension (retourne le dernier élément)
     const extArray = ["jpg", "jpeg", "png"]
 
     // empêche de rentrer des fichiers avec les extensions rejetées par le back
